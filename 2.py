@@ -7,31 +7,13 @@ data = [1, 0, 0, 3, 1, 1, 2, 3, 1, 3, 4, 3, 1, 5, 0, 3, 2, 13, 1, 19, 1, 19, 6, 
 data[1] = 12
 data[2] = 2
 
-def intcode(input_arr):
-    arr = input_arr[:]
+import intcode
 
-    for index in range(0, len(arr), 4):
-        operator = arr[index]
-
-        if operator == 99:
-            return arr[0]
-
-        numberA = arr[arr[index + 1]]
-        numberB = arr[arr[index + 2]]
-
-        if operator == 1:
-            arr[arr[index + 3]] = numberA + numberB
-
-        if operator == 2:
-            arr[arr[index + 3]] = numberA * numberB
-
-    return arr[0]
-
-print(intcode(data))
+print(intcode.intcode(data))
 
 for i in range(0,99):
     for j in range(0, 99):
         data[1] = i
         data[2] = j
-        if intcode(data) == 19690720:
+        if intcode.intcode(data) == 19690720:
             print('part 2 result ', (100*i)+j)

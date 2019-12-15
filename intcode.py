@@ -3,21 +3,8 @@
 # Input:        opcode 3
 # Output:       opcode 4
 
-# opcode param lengths
-num_params = {
-    'ADD': 3,
-    'MULTIPLY': 3,
-    'INPUT': 1,
-    'OUTPUT': 1
-}
-
-# opcode param modes
-POSITION_MODE = 0
-IMMEDIATE_MODE = 1
-
-
-
-def execute_add(intcode, index):
+## TODO: add modes to be taken into account in add and multiply functions.
+def execute_add(intcode, index, modes):
     numberA = intcode[intcode[index + 1]]
     numberB = intcode[intcode[index + 2]]
     intcode[intcode[index + 3]] = numberA + numberB
@@ -25,7 +12,7 @@ def execute_add(intcode, index):
     return intcode, index
 
 
-def execute_multiply(intcode, index):
+def execute_multiply(intcode, index, modes):
     numberA = intcode[intcode[index + 1]]
     numberB = intcode[intcode[index + 2]]
     intcode[intcode[index + 3]] = numberA * numberB
@@ -60,20 +47,23 @@ def intcode(input_arr):
 
     while index <= len(intcode):
         # print(index, len(intcode))
-        opcode = intcode[index]
+        val = [int(x) for x in str(intcode[index])]
+        operation = [0] * (5 - len(listval)) + listval
+        opcode = int("".join(map(str, operation[-2:])))
         # print ('opcode', opcode)
+        modes = operation[:3]
 
         if opcode == 99:
             return execute_done(intcode)
 
         if opcode == 1:
             # print('add')
-            intcode, index = execute_add(intcode, index)
+            intcode, index = execute_add(intcode, index, modes)
             # print(intcode, index)
 
         if opcode == 2:
             # print('multiply')
-            intcode, index = execute_multiply(intcode, index)
+            intcode, index = execute_multiply(intcode, index, modes)
             # print(intcode, index)
 
         if opcode == 3:
@@ -83,3 +73,10 @@ def intcode(input_arr):
             intcode, index = execute_output(intcode, index)
 
     return execute_done(intcode)
+
+
+val = 105
+val = [int(x) for x in str(val)]
+operation = [0] * (5 - len(val)) + val
+opcode = int("".join(map(str, operation[-2:])))
+print(operation[:3])

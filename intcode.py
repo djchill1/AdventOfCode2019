@@ -10,18 +10,26 @@ def calculate_modes(intcode, pointer, modes):
         numberA = intcode[intcode[pointer + 1]]
     elif modes[2] == 1:
         numberA = intcode[pointer + 1]
+    try:
+    #if pointer < len(intcode)-1:
+        # second parameter
+        if modes[1] == 0:
+            numberB = intcode[intcode[pointer + 2]]
+        elif modes[1] == 1:
+            numberB = intcode[pointer + 2]
+    except:
+        numberB = 'NA'
+        print('WARN: no second mode')
 
-    # second parameter
-    if modes[1] == 0:
-        numberB = intcode[intcode[pointer + 2]]
-    elif modes[1] == 1:
-        numberB = intcode[pointer + 2]
-
-    # third parameter
-    if modes[0] == 0:
-        positionC = intcode[pointer + 3]
-    elif modes[0] == 1:
-        positionC = pointer + 3
+    try:
+        # third parameter
+        if modes[0] == 0:
+            positionC = intcode[pointer + 3]
+        elif modes[0] == 1:
+            positionC = pointer + 3
+    except:
+        positionC = 'NA'
+        print('WARN: no third mode')
 
     return numberA, numberB, positionC
 
@@ -48,12 +56,11 @@ def execute_input(intcode, pointer):
     pointer += 2
     return intcode, pointer
 
-# TODO: fails when day05 input is the test case, and value of '3' as input.
 def execute_output(intcode, pointer, modes):
     numberA, numberB, positionC = calculate_modes(intcode, pointer, modes)
     print("Output: ", numberA)
     pointer += 2
-    return intcode, pointer
+    return intcode, pointer, numberA
 
 
 def execute_done(intcode):
@@ -111,7 +118,9 @@ def intcode(input_arr):
         modes = operation[:3]
 
         if opcode == 99:
-            return execute_done(intcode)
+            # return execute_done(intcode)
+            # day 2 solution above
+            return output
 
         if opcode == 1:
             # print('add')
@@ -127,7 +136,8 @@ def intcode(input_arr):
             intcode, pointer = execute_input(intcode, pointer)
 
         if opcode == 4:
-            intcode, pointer = execute_output(intcode, pointer, modes)
+            intcode, pointer, output = execute_output(intcode, pointer, modes)
+            print(output)
 
         if opcode == 5:
             intcode, pointer = execute_jump_if_true(intcode, pointer, modes)
@@ -141,4 +151,4 @@ def intcode(input_arr):
         if opcode == 8:
             intcode, pointer = execute_equals(intcode, pointer, modes)
 
-    return execute_done(intcode)
+    return output

@@ -6,4 +6,5 @@ data_smltest = [3,3,1105,-1,9,1101,0,0,12,4,12,99,1]
 
 import intcode
 
-intcode.intcode(data_test)
+a = intcode.intcode(data)
+print(a)

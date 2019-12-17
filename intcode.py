@@ -11,7 +11,7 @@ def calculate_modes(intcode, pointer, modes):
     elif modes[2] == 1:
         numberA = intcode[pointer + 1]
     try:
-    #if pointer < len(intcode)-1:
+        # if pointer < len(intcode)-1:
         # second parameter
         if modes[1] == 0:
             numberB = intcode[intcode[pointer + 2]]
@@ -48,13 +48,19 @@ def execute_multiply(intcode, pointer, modes):
     return intcode, pointer
 
 
+def get_input(text):
+    return input(text)
+
+
 def execute_input(intcode, pointer):
-    user_input = input('Input:')
+    user_input = get_input('Input ')
+    # user_input = input('Input:')
     ## user input set to 1 for day 5 + tests for intcode!
-    print('your input: ', user_input)
+    print('\nyour input: ', user_input)
     intcode[intcode[pointer + 1]] = int(user_input.strip())
     pointer += 2
     return intcode, pointer
+
 
 def execute_output(intcode, pointer, modes):
     numberA, numberB, positionC = calculate_modes(intcode, pointer, modes)
@@ -105,7 +111,7 @@ def execute_equals(intcode, pointer, modes):
     return intcode, pointer
 
 
-def intcode(input_arr):
+def intcode(input_arr, day='na'):
     intcode = input_arr[:]
     pointer = 0
 
@@ -118,9 +124,10 @@ def intcode(input_arr):
         modes = operation[:3]
 
         if opcode == 99:
-            # return execute_done(intcode)
-            # day 2 solution above
-            return output
+            if day == 2:
+                return execute_done(intcode)
+            else:
+                return output
 
         if opcode == 1:
             # print('add')

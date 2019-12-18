@@ -19,7 +19,7 @@ def calculate_modes(intcode, pointer, modes):
             numberB = intcode[pointer + 2]
     except:
         numberB = 'NA'
-        print('WARN: no second mode')
+        #print('WARN: no second mode')
 
     try:
         # third parameter
@@ -29,7 +29,7 @@ def calculate_modes(intcode, pointer, modes):
             positionC = pointer + 3
     except:
         positionC = 'NA'
-        print('WARN: no third mode')
+       #print('WARN: no third mode')
 
     return numberA, numberB, positionC
 
@@ -52,19 +52,23 @@ def get_input(text):
     return input(text)
 
 
-def execute_input(intcode, pointer):
-    user_input = get_input('Input ')
+def execute_input(intcode, pointer, input, input_index):
+    user_input = input[input_index]
     # user_input = input('Input:')
     ## user input set to 1 for day 5 + tests for intcode!
     print('\nyour input: ', user_input)
-    intcode[intcode[pointer + 1]] = int(user_input.strip())
+    if isinstance(user_input, int) == True:
+        intcode[intcode[pointer + 1]] = user_input
+    else:
+        intcode[intcode[pointer + 1]] = int(user_input.strip())
     pointer += 2
-    return intcode, pointer
+    input_index += 1
+    return intcode, pointer, input_index
 
 
 def execute_output(intcode, pointer, modes):
     numberA, numberB, positionC = calculate_modes(intcode, pointer, modes)
-    print("Output: ", numberA)
+#    print("Output: ", numberA)
     pointer += 2
     return intcode, pointer, numberA
 
@@ -111,9 +115,10 @@ def execute_equals(intcode, pointer, modes):
     return intcode, pointer
 
 
-def intcode(input_arr, day='na'):
+def intcode(input_arr, day='na', input=[0]):
     intcode = input_arr[:]
     pointer = 0
+    input_index = 0
 
     while pointer <= len(intcode):
         # print(pointer, len(intcode))
@@ -140,11 +145,11 @@ def intcode(input_arr, day='na'):
             # print(intcode, pointer)
 
         if opcode == 3:
-            intcode, pointer = execute_input(intcode, pointer)
+            intcode, pointer, input_index = execute_input(intcode, pointer, input, input_index)
 
         if opcode == 4:
             intcode, pointer, output = execute_output(intcode, pointer, modes)
-            print(output)
+           # print(output)
 
         if opcode == 5:
             intcode, pointer = execute_jump_if_true(intcode, pointer, modes)
